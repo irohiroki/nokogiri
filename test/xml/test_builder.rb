@@ -182,6 +182,15 @@ module Nokogiri
         assert_equal 'hello', builder.doc.at('/root').content
       end
 
+      def test_keep_scope
+        builder = Nokogiri::XML::Builder.new(:keep_scope => true)
+        assert_raises(NameError) do
+          builder.root {
+            foo
+          }
+        end
+      end
+
       def test_cdata
         builder = Nokogiri::XML::Builder.new do
           root {

@@ -234,7 +234,7 @@ module Nokogiri
       # A context object for use when the block has no arguments
       attr_accessor :context
 
-      attr_accessor :arity # :nodoc:
+      attr_accessor :keep_scope # :nodoc:
 
       ###
       # Create a builder with an existing root object.  This is for use when
@@ -275,9 +275,9 @@ module Nokogiri
           @parent       = @doc
         end
 
-        @context  = nil
-        @arity    = nil
-        @ns       = nil
+        @context    = nil
+        @keep_scope = options.delete(:keep_scope)
+        @ns         = nil
 
         options.each do |k,v|
           @doc.send(:"#{k}=", v)
@@ -285,8 +285,8 @@ module Nokogiri
 
         return unless block_given?
 
-        @arity = block.arity
-        if @arity <= 0
+        @keep_scope ||= block.arity > 0
+        unless @keep_scope
           @context = eval('self', block.binding)
           instance_eval(&block)
         else
@@ -377,8 +377,8 @@ module Nokogiri
         if block_given?
           old_parent = @parent
           @parent    = node
-          @arity ||= block.arity
-          if @arity <= 0
+          @keep_scope ||= block.arity > 0
+          unless @keep_scope
             instance_eval(&block)
           else
             block.call(self)
