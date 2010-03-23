@@ -223,6 +223,12 @@ module Nokogiri
         assert_equal 1, builder.doc.xpath('//root').length
       end
 
+      def test_node_builder_to_xml
+        node_builder = Nokogiri::XML::Builder.new.root
+
+        assert_equal("<?xml version=\"1.0\"?><root/>", node_builder.to_xml.gsub(/\n/, ''))
+      end
+
     private
 
       def namespaces_defined_on(node)

@@ -412,6 +412,10 @@ module Nokogiri
           @node[k]
         end
 
+        def to_xml
+          @doc_builder.to_xml
+        end
+
         def method_missing(method, *args, &block)
           opts = args.last.is_a?(Hash) ? args.pop : {}
           case method.to_s
