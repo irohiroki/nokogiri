@@ -209,6 +209,20 @@ module Nokogiri
         assert_equal("<?xml version=\"1.0\"?><root><![CDATA[hello world]]></root>", builder.to_xml.gsub(/\n/, ''))
       end
 
+      def test_ignore_instruct
+        builder = Nokogiri::XML::Builder.new
+        builder.instruct!
+
+        assert builder.doc.children.empty?
+      end
+
+      def test_tag_bang
+        builder = Nokogiri::XML::Builder.new
+        builder.tag! "root"
+
+        assert_equal 1, builder.doc.xpath('//root').length
+      end
+
     private
 
       def namespaces_defined_on(node)

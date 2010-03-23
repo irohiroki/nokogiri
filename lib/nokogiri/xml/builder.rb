@@ -337,6 +337,16 @@ module Nokogiri
         @doc.fragment(string).children.each { |x| insert(x) }
       end
 
+      def instruct! directive_tag = :xml, attrs = {} # :nodoc:
+        # ignore
+      end
+
+      ###
+      # Build a tag in Builder::XmlBase compatible syntax.
+      def tag! sym, *args, &block
+        method_missing(sym.to_sym, *args, &block)
+      end
+
       def method_missing method, *args, &block # :nodoc:
         if @context && @context.respond_to?(method)
           @context.send(method, *args, &block)
